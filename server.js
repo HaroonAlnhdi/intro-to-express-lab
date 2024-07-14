@@ -48,5 +48,19 @@ app.get('/rool/:number', (req, res) => {
 //  3. I Want THAT One!
 app.get('/collectibles/:index', (req, res) => {
 
-    res.send(` index : ${req.params.index}!`)
+    let index = parseInt(req.params.index , 10);
+    let product = collectibles[index]
+
+   
+  if ( index >= collectibles.length||isNaN(index) ){
+    res.send(`This item is not yet in stock. Check back soon!`)
+    }
+
+    else{
+        // index = collectibles.indexOf(index)
+        res.send(` So, you want the ${product.name}? For ${product.price}, it can be yours!`)
+    }
 })
+
+
+
