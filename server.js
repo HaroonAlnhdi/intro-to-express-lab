@@ -76,33 +76,32 @@
 
             // 4. Filter Shoes by Query Parameters
             app.get('/shoes', (req, res) => {
-                const minPrice = parseInt(req.query.min, 10);
-                const maxPrice = parseInt(req.query.max, 10);
+                const minPrice = parseInt(req.query.minPrice, 10);
+                const maxPrice = parseInt(req.query.maxPrice, 10);
                 const type = req.query.type;
-              
+            
                 if (isNaN(minPrice) && isNaN(maxPrice) && !type) {
-                  res.send('Please Enter the Min OR MAX Price and Type .. ..');
+                    return res.status(400).send('Please enter at least one query parameters: minPrice or maxPrice or type.');
                 }
-              
+            
                 const filteredShoes = shoes.filter(shoe => {
-                  const matchesMinPrice = !isNaN(minPrice) ? shoe.price >= minPrice : true;
-                  const matchesMaxPrice = !isNaN(maxPrice) ? shoe.price <= maxPrice : true;
-                  const matchesType = type ? shoe.type === type : true;
-                  return matchesMinPrice && matchesMaxPrice && matchesType;
+                    const ResuMinPrice = !isNaN(minPrice) ? shoe.price >= minPrice : true;
+                    const ResuMaxPrice = !isNaN(maxPrice) ? shoe.price <= maxPrice : true;
+                    const matchesType = type ? shoe.type.toLowerCase() === type.toLowerCase() : true;
+                    return ResuMinPrice && ResuMaxPrice && matchesType;
                 });
-              
-                // let responseText = `Filtered shoes based on the criteria:<br>`;
-                // if (!isNaN(minPrice)) responseText += `Minimum price: ${minPrice}<br>`;
-                // if (!isNaN(maxPrice)) responseText += `Maximum price: ${maxPrice}<br>`;
-                // if (type) responseText += `Type: ${type}<br>`;
-                
-                responseText = `Matching shoes:<br>`;
+            
+                if (filteredShoes.length === 0) {
+                    return res.send('No matching shoes found.');
+                }
+            
+                let responseText = `Matching shoes:<br>`;
                 filteredShoes.forEach(shoe => {
-                  responseText += `Name: ${shoe.name}, Price: ${shoe.price}, Type: ${shoe.type}<br>`;
+                    responseText += `Name: ${shoe.name}, Price: ${shoe.price}, Type: ${shoe.type}<br>`;
                 });
-              
+            
                 res.send(responseText);
-              });
+            });
 
 
 
